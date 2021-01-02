@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/public/js/webix/codebase/skins/compact.css" type="text/css" media="screen" charset="utf-8">
+    <style>@font-face{font-family: 'dx';src: url(/public/js/dx.woff) format('woff');}
+        body, table, div, p, h1, h2, h3, h4, h5, h6, pre {font-family:'dx';}</style>
+        
+    <script src="/public/js/webix/codebase/webix.js" type="text/javascript"  charset="utf-8"></script>
+    <script src="/public/app_js/novel10.js" type="text/javascript"  charset="utf-8"></script>
+    <script src="/public/app_js/common.js" type="text/javascript"  charset="utf-8"></script>
+
+    <script type="text/javascript">
+        webix.require.disabled = true;
+        webix.codebase = "/public/js/";
+    </script>
+
+    <script src="/public/js/codemirror/webix_codemirror_novel.js"></script>
+    <script src="/public/js/codemirror/lib/codemirror.js"></script>
+    <script src="/public/js/codemirror/mode/javascript/javascript.js"></script>
+    <script src="/public/js/codemirror/mode/python/python.js"></script>
+    <script src="/public/js/codemirror/mode/sql/sql.js"></script>
+    <script src="/public/js/codemirror/mode/go/go.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/public/js/codemirror/lib/codemirror_novel.css">
+    <link rel="stylesheet" type="text/css" href="/public/js/codemirror/theme/oceanic-next.css">
+    <link rel="stylesheet" type="text/css" href="/public/js/codemirror/theme/dracula.css">
+    <link rel="stylesheet" type="text/css" href="/public/js/codemirror/theme/darcula.css">
+
+    <link rel="stylesheet" href="/public/js/codemirror/addon/dialog/dialog.css">
+    <script src="/public/js/codemirror/addon/dialog/dialog.js"></script>
+    <script src="/public/js/codemirror/addon/search/searchcursor.js"></script>
+    <script src="/public/js/codemirror/addon/search/search.js"></script>
+    <script src="/public/js/codemirror/addon/search/jump-to-line.js"></script>
+
+    <title>mandu novel</title>
+</head>
+<body>
+
+<script type="text/javascript" charset="utf-8">
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    webix.ready(function()
+    {
+
+        webix.ui({view:"popup",	id:"pop_dan", head:"Submenu", width:150,
+            body:{view:"list", id:"list_dan", data:[
+                    {id:"1", location:"단체 이동"},
+                    {id:"2", location:"합치기"},
+                ],
+                datatype:"json", template:"#location#",	autoheight:true, select:true
+            }
+        });
+
+        webix.ui({view:"popup",	id:"pop_new", head:"Submenu", width:200,
+            body:
+                {
+                    rows:
+                        [
+                            {view:"button", align:"left", label: '고고~', click:"new_novel"},
+                            {height:20},
+                            {view:"text", id: "text_gubun1",         label:"구분", labelWidth:50},
+                            {view:"text", id: "text_gubun1_sunbun1", label:"구분 순번1", labelWidth:80},
+                            {view:"text", id: "text_gubun1_sunbun2", label:"구분 순번2", labelWidth:80},
+                            {view:"text", id: "text_gubun1_sunbun3", label:"구분 순번3", labelWidth:80},
+                            {height:20},
+
+                        ]
+                }
+        });
+
+        webix.ui({view:"popup",	id:"pop_move", head:"Submenu", width:200,
+            body:
+                {
+                    rows:
+                        [
+                            {view:"button", align:"left", label: '고고~', click:"move_dan"},
+                            {height:20},
+                            {view:"text", id: "text_gubun",         label:"구분", labelWidth:50},
+                            {view:"text", id: "text_gubun_sunbun1", label:"구분 순번1", labelWidth:80},
+                            {view:"text", id: "text_gubun_sunbun2", label:"구분 순번2", labelWidth:80},
+                            {view:"text", id: "text_gubun_sunbun3", label:"구분 순번3", labelWidth:80},
+                            {height:20},
+
+                        ]
+                }
+        });
+
+        webix.ui(pop_menu);
+
+        var main_view =
+            {
+                type:"space",
+                cols:
+                    [
+                        {
+                            width:300,
+                            rows:
+                                [
+                                    { view:"toolbar", id:"mybar1", elements:
+                                            [
+                                                {view:"button", align:"left", label: '메뉴', autowidth:true, popup:"pop_menu" },
+                                                {view:"text", id: "text_search"},
+                                                {view:"button", align:"left", id:"button_new", label: '새문서', autowidth:true, click:"open_pop_new" },
+                                            ]
+                                    },
+                                    {
+                                        rows:[
+                                            { view:"multiview", cells:[
+                                                    { id:"구분1", rows:[{ view:"tree", id:"tree_1", select:"true" }]},
+                                                    { id:"구분2", rows:[{ view:"tree", id:"tree_2", select:"true" }]},
+                                                    { id:"구분3", rows:[{ view:"tree", id:"tree_3", select:"true" }]},
+                                                    { id:"구분4", rows:[{ view:"tree", id:"tree_4", select:"true" }]},
+                                                    { id:"구분5", rows:[{ view:"tree", id:"tree_5", select:"true" }]},
+                                                ]},
+                                            { view:"tabbar", options:["구분1", "구분2", "구분3", "구분4", "구분5"], optionWidth:55, multiview:true, type:"bottom"}
+                                        ]
+                                    },
+                                ]
+                        },
+                        {view:"resizer"},
+                        {
+                            rows:
+                                [
+                                    { view:"toolbar", id:"mybar2", elements:
+                                            [
+                                                {view:"text", id: "text_sun", width:150, readonly:true},
+                                                {view:"text", id: "text_title", readonly:true},
+                                                {view:"text", id: "text_day", width:250, readonly:true},
+                                                {width:10},
+                                                {view:"button", align:"left", label: '다시읽기', autowidth:true, click:"read_novel"},
+                                                {view:"button", align:"left", label: '확장', autowidth:true, click:"ext_novel"},
+                                            ]
+                                    },
+                                    { view:"codemirror-editor", mode:"sql1", id:"contents_1", readOnly:true },
+                                    { view:"codemirror-editor", mode:"sql1", id:"contents_2", readOnly:true, height:1}
+                                ]
+                        }
+                    ]
+            };
+
+        webix.ui(main_view);
+        
+        $$("list_dan").attachEvent("onItemClick", function(id, e, node){
+            if (id === '1'){ $$("pop_move").show(node); }
+            else if (id === '2'){ webix.message("합치기~"); }
+        });
+        
+        $$('text_gubun1_sunbun3').attachEvent("onKeyPress", function(code, e){
+            if (code == 13)
+                new_novel();
+        });
+        
+        $$('tree_1').attachEvent("onItemClick", function (id, e, node)
+        {
+            if ( $$("tree_1").getItem(id).dan == "last" )
+                read_novel(id, 1);
+        });
+        
+        $$('tree_1').attachEvent("onItemDblClick", function (id, e, node)
+        {
+            let full_title = $$("tree_1").getItem(id).s2+'.'+$$("tree_1").getItem(id).s3+'.'+$$("tree_1").getItem(id).value;
+        
+            if ( $$("tree_1").getItem(id).dan == "last" )
+            {
+                open_windows_novel(full_title);
+                $$("tree_1").gubun = '1';
+            }
+            else
+            {
+                num_tree = "1";
+                $$("pop_dan").show(node);
+            }
+        
+        });
+
+        start_page();
+    });
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+</script>
+
+</body>
+</html>

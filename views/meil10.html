@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/public/js/webix/codebase/skins/compact.css" type="text/css" media="screen" charset="utf-8">
+    <style>@font-face{font-family: 'D2Coding';src: url(/public/js/D2Coding.woff) format('woff');}
+        body, table, div, p, h1, h2, h3, h4, h5, h6, pre {font-family:'D2Coding';}</style>
+
+    <script src="/public/js/webix/codebase/webix.js" type="text/javascript"  charset="utf-8"></script>
+    <script src="/public/app_js/meil10.js" type="text/javascript"  charset="utf-8"></script>
+    <script src="/public/app_js/common.js" type="text/javascript"  charset="utf-8"></script>
+
+    <script type="text/javascript">
+        webix.require.disabled = true;
+        webix.codebase = "/javascripts/";
+    </script>
+
+    <script src="/public/js/nicedit/webix_nicedit.js"></script>
+    <script src="/public/js/nicedit/nicEdit.js"></script>
+
+    <title>mandu meil</title>
+</head>
+<body>
+
+<script type="text/javascript" charset="utf-8">
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    webix.ready(function()
+    {
+        webix.ui(pop_menu);
+
+        webix.ui({view:"window",id:"meil_edit", head:"새일기", move:true,
+            body:
+            {
+                type: "space",
+                rows:
+                [
+                    {view:"text", id: "text_meil_num", width:150, label:"순번", labelWidth:40},
+                    {view:"text", id: "text_gubun", label:"구분", labelWidth:40},
+                    {
+                        cols:
+                        [
+                            {view:"text", id: "text_jong_code", width:150, label:"종목", labelWidth:40},
+                            {view:"text", id: "text_jong_name", width:200},
+                        ]
+                    },                    
+                    {
+                        rows:
+                        [
+                            {view:"datatable", id:"grid_jong", resizeColumn:true, autoConfig:true, height:300, select:true},
+                            {view:"text", id: "text_jong_search", width:200},
+                        ]
+                    },                    
+                    {
+                        cols:
+                        [   
+                            { view:"button", value:"삭제", click:"del_meil_master()", width:60},
+                            {},
+                            { view:"button", value:"저장", click:"save_meil_mastser()", width:60},
+                            { view:"button", value:"닫기", click:"$$('meil_edit').hide();", width:60},
+                        ]
+                    }                    
+                ]
+            }
+        });                
+
+
+        webix.ui({view:"window",id:"meil_sub_edit", head:"새일기_서브", move:true,
+            body:
+            {
+                width:1200,
+                height:900,
+                rows:
+                [
+                    { view:"toolbar", id:"mybar3", elements:
+                        [
+                            { view:"button", value:"삭제", click:"del_meil_sub()", width:60},
+                            {view:"label", id: "meil_sub_info", label:"meil_info"},
+                            {view:"text", id: "text_meil_sub_num", width:65},
+                            {view:"text", id: "text_je", width:250},
+                            {view:"text", id: "text_de", width:80},
+                            {view:"text", id: "text_jung", width:80},
+                            {view:"text", id: "text_so", width:80},
+                            { view:"button", value:"저장", click:"save_meil_sub()", width:60},
+                            { view:"button", value:"닫기", click:"$$('meil_sub_edit').hide();", width:60},
+                        ]
+                    },
+                    { view:"nic-editor", id:"contents_1", height:600},
+                    { view:"resizer"},
+                    {
+                        cols:
+                        [
+                            { view:"nic-editor", id:"contents_2"},
+                            {
+                                width:200,
+                                rows:
+                                [
+                                    {height:10},
+                                    {view:"text", id: "text_jong_code_2",  label:"단축코드", labelWidth:"60"},
+                                    {view:"text", id: "text_jong_name_2", label:"종목명", labelWidth:"60"},
+                                    {view:"text", id: "text_meme_gubun", label:"매매구분", labelWidth:"60"},
+                                    {view:"text", id: "text_meme_su", label:"매매수량", labelWidth:"60"},
+                                    {view:"text", id: "text_meme_day",  label:"매매일자", labelWidth:"60"},
+                                    {}
+                                ]
+                            }
+                        ]
+                    }                    
+                ]
+            }
+        });                        
+
+        var main_view =
+        {
+            type:"space",
+            cols:
+            [
+                {
+                    width:300,
+                    rows:
+                        [
+                            { view:"toolbar", id:"mybar1", elements:
+                                [
+                                    {view:"button", align:"left", label: '메뉴', autowidth:true, popup:"pop_menu" },
+                                    {view:"text", id: "text_search_meil"},
+                                    {view:"button", align:"left", label: '새일기', autowidth:true, click:"open_meil_edit_windows" },
+                                ]
+                            },
+                            {
+                                rows:
+                                [
+                                    { view:"multiview", cells:[
+                                            { id:"구분", rows:[{ view:"tree", id:"tree_3", select:"true" }]},
+                                            { id:"일자", rows:[{ view:"tree", id:"tree_1", select:"true" }]},
+                                            { id:"종목", rows:[{ view:"tree", id:"tree_2", select:"true" }]},
+                                    ]},
+                                    { view:"tabbar", options:["구분", "일자", "종목"], optionWidth:55, multiview:true, type:"bottom"}
+                                ]
+                            },
+                        ]
+                },
+                {
+                    rows:
+                    [
+                        { view:"toolbar", id:"mybar2", elements:
+                            [
+                                {view:"label", id: "meil_info", label:"meil_info"},
+                                {},
+                                {view:"button", align:"left", label: '수정', id:"button_update", autowidth:true, click:"open_meil_edit_windows_update"},
+                                {view:"button", align:"left", label: '추가', id:"button_add", autowidth:true, click:"open_meil_sub_edit_windows"},
+                            ]
+                        },
+                        {height:5},                                
+                        {
+                            id:"chart_frame",
+                            cols:
+                            [
+                                {
+                                    rows:
+                                    [
+                                        { view:"template", id:"tms2", template:"종목정보", width:180, height:270},
+                                    ]
+                                },
+                                {
+                                    rows:
+                                    [
+                                        {
+                                            view:"chart", id:"chart_1", datatype:"jsarray",
+                                            padding:{ top:10, bottom:20, right:10, left:60 }
+                                        },
+                                        {
+                                            view:"chart", id:"chart_2", height:70, datatype:"jsarray",
+                                            padding:{ top:10, bottom:0, right:10, left:60 }
+                                        },
+                                    ]            
+                                }
+                            ]
+                        },
+                        {
+                            view:"scrollview", id:"scrollview_1", borderless:true, scroll:"y", body:
+                            {
+                                type:"space",
+                                id:"meil_board", rows:
+                                [
+                                    {id:"meil_content"}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        webix.ui(main_view);
+
+        $$("text_jong_search").attachEvent("onTimedKeyPress",function()
+        {
+            var value = this.getValue().toLowerCase();
+            $$("grid_jong").filter(function(obj){
+                return obj[0].toLowerCase().indexOf(value)!=-1 || obj[1].toLowerCase().indexOf(value)!=-1;
+            });             
+        });          
+        
+        $$("grid_jong").attachEvent("onItemClick", function(id, e, node)
+        {
+            $$("text_jong_code").setValue($$("grid_jong").getItem(id)[0]);
+            $$("text_jong_name").setValue($$("grid_jong").getItem(id)[1]);
+        });          
+
+        $$('tree_1').attachEvent("onBeforeSelect", function (id, selection)
+        {
+            webix.message(id);
+            get_meil_sub_chart(id);
+            get_meil_sub_content(id);
+        });          
+
+        $$('tree_2').attachEvent("onBeforeSelect", function (id, selection)
+        {
+            webix.message(id);
+            get_meil_sub_chart(id);
+            get_meil_sub_content(id);
+        });       
+        
+        $$('tree_3').attachEvent("onBeforeSelect", function (id, selection)
+        {
+            webix.message(id);
+            get_meil_sub_chart(id);
+            get_meil_sub_content(id);
+        });          
+        
+
+        
+        start_page();
+    });
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+</script>
+
+</body>
+</html>

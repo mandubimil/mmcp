@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/public/js/webix/codebase/skins/compact.css" type="text/css" media="screen" charset="utf-8">
+    <style>@font-face{font-family: 'D2Coding';src: url(/public/js/D2Coding.woff) format('woff');}
+        body, table, div, p, h1, h2, h3, h4, h5, h6, pre {font-family:'D2Coding';}</style>
+
+    <script src="/public/js/webix/codebase/webix.js" type="text/javascript"  charset="utf-8"></script>
+    <script src="/public/app_js/stw10.js" type="text/javascript"  charset="utf-8"></script>
+    <script src="/public/app_js/common.js" type="text/javascript"  charset="utf-8"></script>
+
+    <title>work bun</title>
+</head>
+<body>
+
+<script type="text/javascript" charset="utf-8">
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    webix.ready(function()
+    {
+        webix.ui(pop_menu);
+
+        var main_view =
+        {
+            type:"space",
+            cols:
+            [
+                {
+                    width:300,
+                    rows:
+                        [
+                            { view:"toolbar", id:"mybar1", elements:
+                                [
+                                    {view:"button", align:"left", label: '메뉴', autowidth:true, popup:"pop_menu" },
+                                    {view:"text", id: "text_search_meil"},
+                                ]
+                            },
+                            {
+                                rows:
+                                [
+                                    {height:10},
+                                    {view:"text", id: "jung_gun", labelAlign:"right", label:"이상", width:170},
+                                    {view:"text", id: "word_gun", labelAlign:"right", label:"단어", width:170},
+                                    {height:20},
+                                    {
+                                        cols:
+                                        [
+                                            {view:"text", id: "sdt", labelAlign:"right", label:"일자", width:170},
+                                            {view:"text", id: "edt", width:90},
+                                        ]
+                                    },
+                                    {
+                                        view:"radio", id:"radiobox_1", value:1,  options:
+                                        [
+                                            { value:"하루", id:1 },
+                                            { value:"삼일", id:2 },
+                                            { value:"보름", id:3 },
+                                            { value:"반년", id:4 },
+                                        ]
+                                    },
+
+                                    {height:20},
+                                    { view:"checkbox", id: "check_kl", label:"클리앙_주식", labelAlign:"right", labelWidth:120, value:1},
+                                    { view:"checkbox", id: "check_ilbe", label:"일베_주식", labelAlign:"right", labelWidth:120, value:1},
+                                    {},
+                                ]
+                            },
+                        ]
+                },
+                {
+                    width:300,
+                    rows:
+                    [
+                        { view:"toolbar", id:"mybar2", elements:
+                            [
+                                {view:"label", id: "gun_info", label:"건수"},
+                                {},
+                                {view:"button", align:"left", label: '검색', id:"button_search", autowidth:true, click:"get_word_bun"},
+                            ]
+                        },
+                        {height:5},
+                        {view:"datatable", id:"grid_1", resizeColumn:true, autoConfig:true},
+                    ]
+                },
+                {
+                    rows:
+                    [
+                        { view:"toolbar", id:"mybar3", elements:
+                            [
+                                {view:"label", id: "meil_info", label:"세부"},
+                                {},
+                                {view:"button", align:"left", label: '수정', id:"button_update", autowidth:true, click:"open_meil_edit_windows_update"},
+                                {view:"button", align:"left", label: '추가', id:"button_add", autowidth:true, click:"open_meil_sub_edit_windows"},
+                            ]
+                        },
+                        {height:5},
+                        {view:"datatable", id:"grid_2", resizeColumn:true, autoConfig:true, height:1000},
+                        {height:5},
+                        {view:"label", id: "label_title", label:"제목 일자"},
+                        { view:"template", id:"ju_list_label", template:"mandu"}                        
+                    ]
+                }
+            ]
+        };
+
+        webix.ui(main_view);
+
+
+        $$("radiobox_1").attachEvent("onChange", function(newv, oldv)
+        {
+            if (newv == 1)
+            {
+                $$("sdt").setValue( $$("edt").getValue() );
+            }
+            else if (newv == 2)
+            {
+                $$("sdt").setValue( get_that_day($$("edt").getValue(), -2) );
+            }
+            else if (newv == 3)
+            {
+                $$("sdt").setValue( get_that_day($$("edt").getValue(), -14) );
+            }
+            else if (newv == 4)
+            {
+                $$("sdt").setValue( get_that_day($$("edt").getValue(), -180) );
+            }
+        });  
+
+        $$("grid_1").attachEvent("onItemDblClick", function(id, e, node)
+        {
+            get_word_gesi(id);
+        });                
+
+        $$("grid_2").attachEvent("onItemDblClick", function(id, e, node)
+        {
+            go_word_gesi(id);
+        });                
+        
+        start_page();
+    });
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+</script>
+
+</body>
+</html>

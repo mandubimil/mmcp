@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jQCloud</title>
+  <meta charset="utf-8">
+  
+  <link rel="stylesheet" href="/public/js/jqcloud/jqcloud.css">
+
+  <script src="/public/js/jqcloud/jquery.min.js"></script>
+  <script src="/public/js/jqcloud/jqcloud.js"></script>
+
+  <script type="text/javascript">
+
+    var word_array = opener.json_word;
+
+    $(function() {
+      $("#cloud").jQCloud(word_array, { autoResize: true });
+    });
+  </script>
+
+  
+  <style>
+    #cloud {
+      width: 950px;
+      height: 900px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cloud"></div>
+</body>
+</html>
