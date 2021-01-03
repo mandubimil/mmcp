@@ -12,7 +12,7 @@
 
     <title>work bun</title>
 </head>
-<body>
+<body>  
 
 <script type="text/javascript" charset="utf-8">
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,10 +60,8 @@
                                             { value:"반년", id:4 },
                                         ]
                                     },
-
                                     {height:20},
-                                    { view:"checkbox", id: "check_kl", label:"클리앙_주식", labelAlign:"right", labelWidth:120, value:1},
-                                    { view:"checkbox", id: "check_ilbe", label:"일베_주식", labelAlign:"right", labelWidth:120, value:1},
+                                    { view:"checkbox", id: "check_kl", label:"네이버_금융_주식", labelAlign:"right", labelWidth:120, value:1},
                                     {},
                                 ]
                             },
@@ -99,7 +97,7 @@
                         {view:"datatable", id:"grid_2", resizeColumn:true, autoConfig:true, height:1000},
                         {height:5},
                         {view:"label", id: "label_title", label:"제목 일자"},
-                        { view:"template", id:"ju_list_label", template:"mandu"}                        
+                        { view:"template", id:"ju_list_label", template:"mandu"}
                     ]
                 }
             ]
@@ -126,18 +124,18 @@
             {
                 $$("sdt").setValue( get_that_day($$("edt").getValue(), -180) );
             }
-        });  
+        });
 
         $$("grid_1").attachEvent("onItemDblClick", function(id, e, node)
         {
             get_word_gesi(id);
-        });                
+        });
 
         $$("grid_2").attachEvent("onItemDblClick", function(id, e, node)
         {
             go_word_gesi(id);
-        });                
-        
+        });
+
         start_page();
     });
 

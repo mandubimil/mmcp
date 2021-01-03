@@ -102,6 +102,8 @@ func PostCode10(c echo.Context) error {
 			cmdStr = "python3 "
 		case "js":
 			cmdStr = "node "
+		case "ts":
+			cmdStr = "tsc "
 		default:
       cmdStr = "?"
 		}

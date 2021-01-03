@@ -58,6 +58,7 @@ function exec_file()
     return 1;
   }
 
+	$$("cm_run").setValue("");
 	webix.ajax().headers({"Content-type":"application/json"}).post("/code10/execFile", send_json, function(text)
 	{
     $$("cm_run").setValue(text);
@@ -146,7 +147,7 @@ function ctls()
       // if(e.which == 84 && isCtrl == true) {
       //     //run code for CTRL+T -- ie, new tab!
       //     return false;
-      }
+      //}
   }
 }
 
@@ -236,7 +237,7 @@ function read_code(fullName, fileName, dirName)
   $$("contents_1")._render_cm_editor();
 
 	var send_json = {"풀경로":fullName, "파일":fileName, "경로":dirName};
-	if (last_split != 'go' && last_split != 'py' && last_split != 'js' && last_split != 'html' && last_split != 'txt' && last_split != 'sql')
+	if (last_split != 'go' && last_split != 'py' && last_split != 'js' && last_split != 'html' && last_split != 'txt' && last_split != 'sql' && last_split != 'ts')
 	{
 		webix.confirm({title:$$('contents_1').제목, text:"정말 불러?", callback:function(result)
 		{
