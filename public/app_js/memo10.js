@@ -1,4 +1,5 @@
 wi = 0;
+state_left_window = true;
 
 function start_page()
 {
@@ -15,11 +16,25 @@ function ctls()
   }
 
   document.onkeydown=function(e){
+      // webix.message(e.which)
       if(e.which == 17) isCtrl=true;
+
       if(e.which == 83 && isCtrl == true) {
           //run code for CTRL+S -- ie, save!
           save_memo();
           return false;
+      }
+      else if (e.which == 81 && isCtrl == true) {
+        if (state_left_window)
+        {
+          $$("left_window").hide();
+          state_left_window = false;
+        }
+        else
+        {
+          $$("left_window").show();
+          state_left_window = true;
+        }
       }
   }
 }

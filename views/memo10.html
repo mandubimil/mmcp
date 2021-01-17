@@ -36,6 +36,7 @@ webix.ready(function()
     cols:
 		[
       {
+				id:"left_window",
         width:300,
         rows:
         [
@@ -50,6 +51,7 @@ webix.ready(function()
           { view:"template", id:"statebar1", template:"mandu", height:23}
         ]
       },
+			{ view:"resizer"},
       {
         rows:
         [
@@ -83,7 +85,7 @@ webix.ready(function()
   webix.UIManager.addHotKey("Alt+W", function()
   {
     save_memo();
-  }); 
+  });
 
 
   $$("text_search_memo").attachEvent("onTimedKeyPress",function()
